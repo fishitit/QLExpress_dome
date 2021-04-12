@@ -24,6 +24,14 @@ public class RuleHandle {
 	private static ExpressRunner runner = new ExpressRunner();
 	private static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("rule-pool-%d").build();
 	private static ExecutorService pool = new ThreadPoolExecutor(20, 60, 1L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),namedThreadFactory);
+	static{
+		try {
+			runner.addOperator("已在",new IntersectOperator());
+			runner.addOperator("不存在",new NotExistOperator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static Boolean execute(RuleExp rule) {
 		Future<Boolean> fs =pool.submit(new Callable<Boolean>() {
@@ -38,24 +46,16 @@ public class RuleHandle {
 			if(result==null){
 				System.out.println(String.format("hys-nullponiter-test:fs=%s,result=%s", fs,result));
 			}
-			if(!result) {
+			if(result) {
 				System.out.println("参数："+JSON.toJSONString(rule.getContext()));
 				System.out.println("表达式："+rule.getExp());
+				System.out.println("结果："+result);
 			}
 			return result;
 		} catch (Exception e) {
 			e.fillInStackTrace();
 		}
 		return null;
-	}
-	
-	static{
-		try {
-			runner.addOperator("已在",new IntersectOperator());
-			runner.addOperator("不存在",new NotExistOperator());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private static Boolean executeRule(RuleExp rule) {
