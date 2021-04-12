@@ -8,13 +8,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.ql.operator.IntersectOperator;
-import com.ql.operator.NotExistOperator;
 import com.ql.source.Source;
 import com.ql.template.Parameter;
 import com.ql.util.express.DefaultContext;
-import com.ql.util.express.ExpressRunner;
 
 /**
  * 规则定义
@@ -51,6 +47,7 @@ public class RuleExp {
 	 * 源数据资源池，用于替换表达式和生成模拟数据，资源池的数据最后会落地 context
 	 */
 	private Source  source;
+	
 	
 	public RuleExp(String exp) {
 		this.exp=exp;
