@@ -1,11 +1,13 @@
 package com.ql.source;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author wangmengguang
  *
  */
-public class User {
+public class User implements Serializable {
 	
 	public static int GENDER_BOY=1;
 	public static int GENDER_GRIL=0;

@@ -1,5 +1,6 @@
 package com.ql.rule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ import com.ql.util.express.DefaultContext;
  * @author wangmengguang
  *
  */
-public class RuleExp {
+public class RuleExp implements Serializable {
 	/**
 	 * 执行规则的数据源
 	 */
@@ -112,7 +113,39 @@ public class RuleExp {
 			i++;
 		}
 	}
-	
+
+	public DefaultContext<String, Object> getContext() {
+		return context;
+	}
+
+	public void setContext(DefaultContext<String, Object> context) {
+		this.context = context;
+	}
+
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
+	}
+
+	public String getExp() {
+		return exp;
+	}
+
+	public void setExp(String exp) {
+		this.exp = exp;
+	}
+
+	public String getRuleName() {
+		return ruleName;
+	}
+
+	public void setRuleName(String ruleName) {
+		this.ruleName = ruleName;
+	}
+
 	public String getCode() {
 		return code;
 	}
@@ -121,26 +154,11 @@ public class RuleExp {
 		this.code = code;
 	}
 
-	public DefaultContext<String, Object> getContext() {
-		return context;
-	}
-	public String getExp() {
-		return exp;
-	}
-	public List<Parameter> getParameters() {
-		return parameters;
-	}
-	public String getRuleName() {
-		return ruleName;
-	}
-	public void setRuleName(String ruleName) {
-		this.ruleName = ruleName;
-	}
 	public Source getSource() {
 		return source;
 	}
+
 	public void setSource(Source source) {
 		this.source = source;
 	}
-	
 }

@@ -1,5 +1,6 @@
 package com.ql.source;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * @author wangmengguang
  *
  */
-public class Source {
+public class Source implements Serializable {
     private List<Course> courseList =new ArrayList<Course>();
     
     private User user=new User();

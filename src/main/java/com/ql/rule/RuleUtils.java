@@ -1,9 +1,15 @@
 package com.ql.rule;
 
+import java.util.List;
+
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.ql.operator.IntersectOperator;
 import com.ql.operator.NotExistOperator;
 import com.ql.source.Source;
+import com.ql.template.Parameter;
 import com.ql.util.express.ExpressRunner;
 
 /**
@@ -16,7 +22,10 @@ public class RuleUtils {
 	
 	public static RuleExp importRule(String ruleText) {
 		try {
-			return JSON.parseObject(ruleText, RuleExp.class);
+			RuleExp rule= JSON.parseObject(ruleText,new TypeReference<RuleExp>(){}); 
+			JSONArray parametersObj= JSON.parseObject(ruleText).getJSONArray("parameters");
+			rule.setParameters(JSONObject.parseArray(parametersObj.toJSONString(), Parameter.class));
+			return rule;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

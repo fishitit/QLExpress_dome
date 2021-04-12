@@ -1,5 +1,6 @@
 package com.ql.source;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @author wangmengguang
  *
  */
-public class Course {
+public class Course implements Serializable {
 
 	private Long id;
 	
