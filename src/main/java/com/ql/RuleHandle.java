@@ -15,63 +15,87 @@ import com.ql.operator.NotExistOperator;
 import com.ql.rule.RuleExp;
 import com.ql.util.express.ExpressRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 执行器
  * @author wangmengguang
  *
  */
+@Slf4j
 public class RuleHandle {
-	private static ExpressRunner runner = new ExpressRunner();
+	private static boolean isInitialRunner = false;
+	private static ExpressRunner runner;
+	
 	private static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("rule-pool-%d").build();
 	private static ExecutorService pool = new ThreadPoolExecutor(20, 60, 1L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),namedThreadFactory);
+	
 	static{
-		try {
-			runner.addOperator("已在",new IntersectOperator());
-			runner.addOperator("不存在",new NotExistOperator());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		runner = new ExpressRunner();
+		initRunner(runner);
 	}
 	
-	public static Boolean execute(RuleExp rule) {
-		Future<Boolean> fs =pool.submit(new Callable<Boolean>() {
+	private static void initRunner(ExpressRunner runner) {
+		if (isInitialRunner == true) {
+			return;
+		}
+		synchronized (runner) {
+			if (isInitialRunner == true) {
+				return;
+			}
+			try {
+				runner.addOperator("已在",new IntersectOperator());
+				runner.addOperator("不存在",new NotExistOperator());
+			} catch (Exception e) {
+				log.error("初始化失败表达式",e);
+				throw new RuntimeException("初始化失败表达式", e);
+			}
+		}
+		isInitialRunner = true;
+	}
+	
+	/**
+	 * 多线程执行,等到回调
+	 * @param rule
+	 * @return
+	 */
+	public static Object execute(RuleExp rule) {
+		initRunner(runner);
+		Future<Object> fs =pool.submit(new Callable<Object>() {
 			@Override
-			public Boolean call() throws Exception {
+			public Object call() throws Exception {
 				return executeRule(rule);
 			}
 		});
-		
 		try {
-			Boolean result = fs==null?null:fs.get();
-			if(result==null){
-				System.out.println(String.format("hys-nullponiter-test:fs=%s,result=%s", fs,result));
-			}
-			if(result) {
-				System.out.println("参数："+JSON.toJSONString(rule.getContext()));
-				System.out.println("表达式："+rule.getExp());
-				System.out.println("结果："+result);
+			Object result = fs==null?null:fs.get();
+			if(result!=null){
+				log.debug("参数："+JSON.toJSONString(rule.getContext()));
+				log.debug("表达式："+rule.getExp());
+				log.debug("结果："+result);
 			}
 			return result;
 		} catch (Exception e) {
-			e.fillInStackTrace();
+			log.error("执行异常",e);
 		}
 		return null;
 	}
 	
-	private static Boolean executeRule(RuleExp rule) {
+	/**
+	 * 执行内容
+	 * @param rule
+	 * @return
+	 */
+	private static Object executeRule(RuleExp rule) {
 		try {
 			if(rule.getSource()==null) {
-				return false;
+				throw new RuntimeException("资源池为空");
 			}
 			rule.setRuleContext();
-			Object result = runner.execute(rule.getExp(), rule.getContext(), null, true, false);
-			if(result !=null && result instanceof Boolean) {
-				return (Boolean)result;
-			}
+			return runner.execute(rule.getExp(), rule.getContext(), null, true, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException("执行异常",e);
 		}
-		return false;
 	}
 	
 	

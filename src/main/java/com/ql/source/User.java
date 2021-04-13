@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 	
+	private static final long serialVersionUID = 5207884030074129113L;
 	public static int GENDER_BOY=1;
 	public static int GENDER_GRIL=0;
 	

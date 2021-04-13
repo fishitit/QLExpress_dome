@@ -1,6 +1,5 @@
 package com.ql.rule;
 
-import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -8,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.ql.operator.IntersectOperator;
 import com.ql.operator.NotExistOperator;
+import com.ql.source.Course;
 import com.ql.source.Source;
 import com.ql.template.Parameter;
 import com.ql.util.express.ExpressRunner;
@@ -19,13 +19,24 @@ import com.ql.util.express.ExpressRunner;
  */
 public class RuleUtils {
 	
-	
 	public static RuleExp importRule(String ruleText) {
 		try {
 			RuleExp rule= JSON.parseObject(ruleText,new TypeReference<RuleExp>(){}); 
 			JSONArray parametersObj= JSON.parseObject(ruleText).getJSONArray("parameters");
 			rule.setParameters(JSONObject.parseArray(parametersObj.toJSONString(), Parameter.class));
 			return rule;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    return null;
+	}
+	
+	public static Source importSource(String sourceText) {
+		try {
+			Source rource= JSON.parseObject(sourceText,new TypeReference<Source>(){}); 
+			JSONArray courseListObj= JSON.parseObject(sourceText).getJSONArray("courseList");
+			rource.setCourseList(JSONObject.parseArray(courseListObj.toJSONString(), Course.class));
+			return rource;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,7 +65,7 @@ public class RuleUtils {
 		runner.addOperator("已在",new IntersectOperator());
 		runner.addOperator("不存在",new NotExistOperator());
 		
-		Source source=JSON.parseObject(mocktext, Source.class); 
+		Source source=importSource(mocktext); 
 		rule.setSource(source);
 		rule.setRuleContext();
 		System.out.println("参数："+JSON.toJSONString(rule.getContext()));

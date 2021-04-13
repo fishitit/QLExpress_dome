@@ -25,10 +25,15 @@ public class BaseRule {
 	}
 	
 	
+	/**
+	 * 年龄大于X
+	 * @param x
+	 * @return
+	 */
 	public RuleExp userAgeGeqX(Integer x) {
 		String express = "if($0 > x)then{true}else{false}";
 		RuleExp rule= new RuleExp(express);
-		rule.setCode("userAge");
+		rule.setCode("userAgeGeqX");
 		rule.setRuleName("用户宝宝年龄是否大于"+x);
 
 		Parameter p1 =new Parameter("年龄","Integer",0,"src.user.age","x",x.toString(),"取值范围(0~500)");

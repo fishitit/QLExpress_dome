@@ -11,21 +11,25 @@ import com.ql.rule.RuleExp;
 import com.ql.rule.RuleUtils;
 import com.ql.source.Source;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @author wangmengguang
  *
  */
+@Slf4j
 public class Case1 {
 	public static void main(String[] args) throws Exception {
 		//CreateMoreRule();
 		importRole();
+		log.info("info");
 	}
 	
 	
 	private static void importRole() {
 		try {
-			String text="{\"code\":\"buyCourseLeX\",\"exp\":\"if(src.courseList.size()  <=x)then{true}else{false}  \",\"parameters\":[{\"index\":0,\"name\":\"x值\",\"range\":\"取值范围(正整数)\",\"ruleMapCode\":\"x\",\"sourceCode\":\"src.courseList.size()\",\"type\":\"Integer\",\"value\":\"9\"}],\"ruleName\":\"判断用户购买的课程数量是否小于等于X\"}";
+			String text="{\"code\":\"buyCourseLeX\",\"exp\":\"if(src.courseList.size()  <= x)then{true}else{false}  \",\"parameters\":[{\"index\":0,\"name\":\"x值\",\"range\":\"取值范围(正整数)\",\"ruleMapCode\":\"x\",\"sourceCode\":\"src.courseList.size()\",\"type\":\"Integer\",\"value\":\"9\"}],\"ruleName\":\"判断用户购买的课程数量是否小于等于X\"}";
 			RuleExp rule =RuleUtils.importRule(text);
 			rule.setSource(JMockData.mock(Source.class));
 			rule.replaceExp();

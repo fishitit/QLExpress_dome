@@ -10,6 +10,8 @@ import java.util.Date;
  */
 public class Course implements Serializable {
 
+	private static final long serialVersionUID = 9203104316243245923L;
+
 	private Long id;
 	
 	private Date purchasedate;
