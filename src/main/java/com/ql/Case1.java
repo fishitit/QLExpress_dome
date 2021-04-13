@@ -33,7 +33,7 @@ public class Case1 {
 			RuleExp rule =RuleUtils.importRule(text);
 			rule.setSource(JMockData.mock(Source.class));
 			rule.replaceExp();
-			System.out.println(RuleHandle.execute(rule));
+			System.out.println(RuleUtils.verifyRule(rule, JSON.toJSONString(JMockData.mock(Source.class))));
 			
 			
 		}catch (Exception e) {

@@ -11,7 +11,9 @@ import java.util.List;
  *
  */
 public class Source implements Serializable {
-    private List<Course> courseList =new ArrayList<Course>();
+	private static final long serialVersionUID = 1L;
+
+	private List<Course> courseList =new ArrayList<Course>();
     
     private User user=new User();
     
